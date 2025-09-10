@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Galería Familiar</title>
+  <style>
+    body {margin:0;font-family:sans-serif;background:#111;color:#fff;text-align:center;}
+    h1 {margin:20px 0;}
+    .galeria {display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;padding:20px;}
+    .item img, .item video {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: contain;
+  background: #000;
+  transition: transform .3s;
+}
+
+    .item img,.item video {width:100%;height:150px;object-fit:cover;transition:transform .3s;}
+    .item:hover img,.item:hover video {transform:scale(1.05);}
+    .lightbox {display:none;position:fixed;z-index:999;top:0;left:0;width:100%;height:100%;
+               background:rgba(0,0,0,0.9);justify-content:center;align-items:center;flex-direction:column;}
+    .lightbox .contenido {
+  max-width: 95vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+    .controles {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn {
+  background: #0077ff;
+  border: none;
+  padding: 12px 18px;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn:hover { background: #3399ff; }
+
+    .btn:hover {background:#666;}
+  </style>
+</head>
+<body>
+
+  <h1>Familia Colcha ya dejen de pedirme las fotos 
+    
+  </h1>
+
+  <div class="galeria" id="galeria"></div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span id="media-container"></span>
+    <div class="controles">
+      <button class="btn" onclick="anterior()">⟵ Anterior</button>
+      <button class="btn" onclick="siguiente()">Siguiente ⟶</button>
+      <button class="btn" onclick="cerrarLightbox()">✖ Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    const elementos = [
+  {
+    "tipo": "imagen",
+    "src": "media/97539DEE-0B5A-4B48-8029-EB01F4E7EAC2.jpg"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8398.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8399.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8400.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8401.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8402.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8405.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8406.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8407.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8408.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8412.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8413.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8414.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8415.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8416.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8417.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8418.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8419.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8420.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8421.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8423.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8424.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8425.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8426.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8427.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8428.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8429.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8430.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8431.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8432.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8433.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8434.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8435.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8437.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8438.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8440.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8441.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8442.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8443.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8444.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8445.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8446.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8447.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8448.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8449.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8450.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8451.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8452.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8454.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8455.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8456.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8457.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8458.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8459.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8460.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8461.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8462.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8463.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8470.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8471.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8472.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8473.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8523.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8524.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8527.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8528.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8530.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8539.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8540.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8546.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8547.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8557.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8558.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8559.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8560.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8561.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8562.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8563.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8564.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8565.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8566.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8567.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8568.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8569.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8570.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8571.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8572.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8573.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8576.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8577.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8580.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8581.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8602.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8603.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8604.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8605.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8606.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8607.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8608.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8609.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8611.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8612.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8614.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8615.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8616.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8617.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8618.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8619.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8620.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8621.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8622.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8623.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8624.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8625.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8626.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8627.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8628.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8629.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8630.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8631.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8632.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8633.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8634.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8635.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8636.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8637.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8638.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8639.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8640.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8641.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8642.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8643.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8644.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8645.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8646.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8647.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8648.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8649.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8650.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8651.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8652.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8653.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8654.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8655.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8656.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8657.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8658.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8659.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8660.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8661.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8662.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8663.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8664.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8665.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8666.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8667.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8668.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8669.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8670.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8671.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8672.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8673.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8674.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8675.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8676.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8677.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8678.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8679.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8680.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8681.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8682.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8683.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8684.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8685.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8686.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8687.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8688.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8689.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8690.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8691.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8692.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8693.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8694.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8695.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8696.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8697.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8698.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8703.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8704.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8705.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8706.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8707.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8708.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8709.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8710.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8711.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8712.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8713.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8715.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8716.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8717.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8718.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8719.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8720.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8721.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8722.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8723.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8726.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8727.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8728.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8729.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8730.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8731.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8732.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8733.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8734.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8735.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8736.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8737.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8738.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8739.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8740.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8741.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8742.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8743.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8744.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8745.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8746.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8747.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8748.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8749.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8750.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8751.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8752.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8753.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8754.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8755.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8756.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8757.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8758.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8761.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8763.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8764.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8770.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8771.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8772.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8773.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8774.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8775.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8776.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8777.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8778.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8779.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8780.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8782.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8783.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8784.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8785.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8786.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8787.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8788.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8789.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8790.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8791.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8792.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8793.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8794.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8795.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8796.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8797.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8798.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8799.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8800.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8801.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8802.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8803.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8804.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8805.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8822.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8823.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8824.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8825.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8827.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8828.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8829.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8830.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8831.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8832.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8833.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8834.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8835.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8836.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8837.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8838.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8839.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8840.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8841.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8842.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8844.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8845.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8846.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8847.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8848.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8849.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8850.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8851.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8862.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8863.JPEG"
+  },
+  {
+    "tipo": "imagen",
+    "src": "media/IMG_8864.JPEG"
+  },
+  {
+    "tipo": "video",
+    "src": "media/48a31d2c82054d2799bdece6f3f9dff9.mp4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/62CE307E-DC1D-4504-B593-C9F432509566.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/9fc6dd8c371c4382a4d5f57355f3b944.mp4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/BEF64D6A-117C-4EF5-9856-37ED8C61EE8A.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8422.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8439.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8453.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8474.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8482.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8521.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8522.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8531.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8535.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8536.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8541.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8554.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8556-1.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8556.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8714.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8865.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/IMG_8866.MP4"
+  },
+  {
+    "tipo": "video",
+    "src": "media/d9fa9f34356f46af80f414e5aa7a6fbb.MP4"
+  }
+];
+
+    let actual = 0;
+
+    function renderGaleria(){
+      const galeria = document.getElementById("galeria");
+      galeria.innerHTML = "";
+      elementos.forEach((item,index)=>{
+        const div=document.createElement("div");
+        div.className="item";
+        div.onclick=()=>abrirLightbox(index);
+        if(item.tipo==="imagen"){{
+          const img=document.createElement("img");
+          img.src=item.src;div.appendChild(img);
+        }}else{{
+          const video=document.createElement("video");
+          video.src=item.src;video.muted=true;div.appendChild(video);
+        }}
+        galeria.appendChild(div);
+      });
+    }
+
+    function abrirLightbox(index){
+      actual=index;mostrarElemento();
+      document.getElementById("lightbox").style.display="flex";
+    }
+    function cerrarLightbox(){
+      document.getElementById("media-container").innerHTML="";
+      document.getElementById("lightbox").style.display="none";
+    }
+    function mostrarElemento(){
+      const cont=document.getElementById("media-container");
+      cont.innerHTML="";
+      const item=elementos[actual];
+      if(item.tipo==="imagen"){{
+        const img=document.createElement("img");
+        img.src=item.src;img.className="contenido";cont.appendChild(img);
+      }}else{{
+        const video=document.createElement("video");
+        video.src=item.src;video.className="contenido";video.controls=true;video.autoplay=true;cont.appendChild(video);
+      }}
+    }
+    function anterior(){actual=(actual-1+elementos.length)%elementos.length;mostrarElemento();}
+    function siguiente(){actual=(actual+1)%elementos.length;mostrarElemento();}
+
+    renderGaleria();
+  </script>
+
+</body>
+</html>
